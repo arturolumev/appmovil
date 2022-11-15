@@ -6,42 +6,43 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".Login"
-    android:background="@color/verde_primario"
+    android:background="#BDBDBD"
     android:padding="30dp">
 
     <ImageView
         android:id="@+id/logo_app"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_launcher_background"
-        android:layout_weight="1"/>
+        app:srcCompat="@drawable/logo_recicla"
+        android:layout_weight="1"
+        android:padding="50dp"/>
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/secrcode"
+        android:fontFamily="@font/robotobold"
+        android:padding="10dp"
         android:text="USUARIO"
-        android:textColor="@color/verde_oscuro"
-        android:textSize="24sp"
-        />
+        android:textColor="@color/verde_secundario"
+        android:textSize="12sp" />
 
     <EditText
         android:id="@+id/txtusuario"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name" />
+        android:inputType="textPersonName" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/secrcode"
+        android:fontFamily="@font/robotobold"
         android:text="PASSWORD"
-        android:textColor="@color/verde_oscuro"
-        android:textSize="24sp" />
+        android:padding="10dp"
+        android:textColor="@color/verde_secundario"
+        android:textSize="12sp" />
 
     <EditText
         android:id="@+id/editTextTextPassword"
@@ -56,4 +57,15 @@
         android:layout_height="70dp"
         android:backgroundTint="@color/verde_oscuro"
         android:text="login" />
+
+    <TextView
+        android:id="@+id/register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/robotoregular"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="¿No tienes una cuenta? Registrate"
+        android:textColor="@color/black"
+        android:textSize="14sp" />
 </LinearLayout>
