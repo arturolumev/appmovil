@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/menu">
+    <item
+        android:id="@+id/action_calendar"
+        android:enabled="true"
+        android:icon="@drawable/ic_calendar"
+        android:title="CALENDARIO"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_top10"
+        android:enabled="true"
+        android:icon="@drawable/ic_top10"
+        android:title="TOP 10"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_statics"
+        android:enabled="true"
+        android:icon="@drawable/ic_statics"
+        android:title="ESTADÍSTICAS"
+        app:showAsAction="ifRoom" />
+</menu>

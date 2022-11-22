@@ -10,4 +10,5 @@
     <color name="verde_primario">#B0D5A3</color>
     <color name="verde_secundario">#488C49</color>
     <color name="verde_oscuro">#0B6B09</color>
+    <color name="gris">#BDBDBD</color>
 </resources>

@@ -29,5 +29,13 @@
         android:selectedWeekBackgroundColor="#000000"
         android:weekSeparatorLineColor="#000000">
     </CalendarView>
-
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:itemBackground="@color/design_default_color_background"
+        app:itemIconTint="@color/white"
+        app:itemTextColor="@color/white"
+        app:menu="@menu/bottom_navigation_main" />
 </RelativeLayout>
