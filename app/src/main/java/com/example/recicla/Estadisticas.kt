@@ -103,7 +103,7 @@ class Estadisticas : AppCompatActivity() {
         cartesian.legend().padding(0.0, 0.0, 10.0, 0.0)
         anyChartView.setChart(cartesian)
 
-        val navigation = findViewById<BottomNavigationView>(R.id.menu);
+        val navigation = findViewById<BottomNavigationView>(R.id.bottom_navigation);
         navigation?.setOnItemSelectedListener{
             when(it.itemId) {
                 R.id.action_calendar -> {

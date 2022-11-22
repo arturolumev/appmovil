@@ -1,5 +1,6 @@
 package com.example.recicla
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class CalendarEvents : AppCompatActivity() {
     var calendar: CalendarView? = null
@@ -44,5 +46,24 @@ class CalendarEvents : AppCompatActivity() {
                 }
             }
         )
+
+        val navigation = findViewById<BottomNavigationView>(R.id.bottom_navigation);
+        navigation?.setOnItemSelectedListener{
+            when(it.itemId) {
+                R.id.action_calendar -> {
+                    startActivity(Intent(this,CalendarEvents::class.java))
+                    return@setOnItemSelectedListener true
+                }
+                R.id.action_top10->{
+                    startActivity(Intent(this,TopTenAll::class.java))
+                    return@setOnItemSelectedListener true
+                }
+                R.id.action_statics->{
+                    startActivity(Intent(this,Estadisticas::class.java))
+                    return@setOnItemSelectedListener true
+                }
+            }
+            false
+        }
     }
 }

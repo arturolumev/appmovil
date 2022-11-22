@@ -34,8 +34,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        app:itemBackground="@color/design_default_color_background"
-        app:itemIconTint="@color/white"
-        app:itemTextColor="@color/white"
+        app:itemBackground="@color/gris"
+        app:itemIconTint="@color/verde_secundario"
+        app:itemTextColor="@color/verde_secundario"
         app:menu="@menu/bottom_navigation_main" />
 </RelativeLayout>

@@ -20,6 +20,13 @@
             android:name=".Login"
             android:exported="false" />
         <activity
+            android:name=".TopTenAll"
+            android:exported="false"
+            android:parentActivityName=".Estadisticas"/>
+        <activity
+            android:name=".TopTen"
+            android:exported="false"/>
+        <activity
             android:name=".EventoDetalle"
             android:exported="false" />
         <activity
