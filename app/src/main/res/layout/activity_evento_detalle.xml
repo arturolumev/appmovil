@@ -6,12 +6,13 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:src="@android:drawable/ic_dialog_info"
+        android:id="@+id/imagen"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:scaleType="center"
+        android:layout_height="150dp"
         android:background="@color/verde_primario"
-        android:contentDescription="@string/app_name" />
+        android:contentDescription="@string/app_name"
+        android:scaleType="center"
+        android:src="@android:drawable/ic_dialog_info" />
 
     <TextView
         android:id="@+id/fecha"
@@ -52,5 +53,32 @@
         android:gravity="center"
         android:text="descripcion1"
         android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/lugar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="4dp"
+        android:fontFamily="sans-serif"
+        android:gravity="center"
+        android:text="lugar1"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tesperamos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="8dp"
+        android:fontFamily="sans-serif"
+        android:gravity="center"
+        android:text="¡Te esperamos!"
+        android:textSize="16sp"
+        android:textStyle="bold"/>
 
 </LinearLayout>
