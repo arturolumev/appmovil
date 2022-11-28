@@ -1,9 +1,6 @@
 package com.example.recicla
 
-import android.R
 import android.content.Intent
-import android.icu.number.NumberFormatter.with
-import android.icu.number.NumberRangeFormatter.with
 import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
@@ -17,7 +14,6 @@ import com.android.volley.toolbox.Volley
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.squareup.picasso.Picasso
 import org.json.JSONException
-
 
 class CalendarEvents : AppCompatActivity() {
     var calendar: CalendarView? = null
@@ -55,30 +51,22 @@ class CalendarEvents : AppCompatActivity() {
             val stringRequest = JsonArrayRequest(url,
                 { response ->
                     try {
-                        var id=""
-                        var titulo=""
-                        var descripcion=""
-                        var lugar=""
-                        var imagen=""
-                        var fecha=""
-
                         for (i in 0 until response.length()) {
-                            id =
+                            var id =
                                 response.getJSONObject(i).getString("id")
-                            titulo =
+                            var titulo =
                                 response.getJSONObject(i).getString("titulo")
-                            descripcion =
+                            var descripcion =
                                 response.getJSONObject(i).getString("descripcion")
-                            lugar =
+                            var lugar =
                                 response.getJSONObject(i).getString("lugar")
-                            imagen =
+                            var imagen =
                                 response.getJSONObject(i).getString("imagen")
-                            fecha =
+                            var fecha =
                                 response.getJSONObject(i).getString("fecha").substring(0,10)
 
                             almacenarDatos(id, titulo,descripcion,lugar,imagen,fecha)
                         }
-
                     } catch (e: JSONException) {
                         Toast.makeText(
                             applicationContext,
@@ -97,7 +85,13 @@ class CalendarEvents : AppCompatActivity() {
         }
     }
 
-    fun almacenarDatos(id:String, titulo:String, descripcion:String, lugar:String, imagen:String, fecha:String){
+    val titulos: MutableList<String> = mutableListOf()
+    val descripciones: MutableList<String> = mutableListOf()
+    val lugares: MutableList<String> = mutableListOf()
+    val imagenes: MutableList<String> = mutableListOf()
+    val fechas: MutableList<String> = mutableListOf()
+
+    fun almacenarDatos(id:String, titulo:String, descripcion:String, lugar:String, imagen:String, fecha:String): String {
         var diccionario: Map<String, String> = mapOf(Pair("titulo2", titulo),
             Pair("descripcion2", descripcion),
             Pair("lugar2", lugar),
@@ -105,32 +99,29 @@ class CalendarEvents : AppCompatActivity() {
             Pair("fecha2", fecha)
         )
 
-        //queria almacenar las fechas en un array
-        val fechas = arrayOfNulls<String>(4)
-        fechas.plus(diccionario["fecha2"].toString())
-        for(i in fechas.indices){
-            Log.e("FECHASSSSS","${fechas[i]} está en la posición ${i+1}")
-        }
+        titulos.add(diccionario["titulo2"].toString())
+        descripciones.add(diccionario["descripcion2"].toString())
+        lugares.add(diccionario["lugar2"].toString())
+        imagenes.add(diccionario["imagen2"].toString())
+        fechas.add(diccionario["fecha2"].toString())
+        //println("List: $fechas")
 
         calendar = findViewById<View>(com.example.recicla.R.id.calendar) as CalendarView
         date_view = findViewById<View>(com.example.recicla.R.id.date_view) as TextView
 
-        //por cada elemento en el diccionario imprime
-        //y sí se imprimen tooodos los elementos de la bd
-        //funciona bien
-        Log.e("DICCIONARIOOOOO", diccionario.toString())
-        for((clave, valor) in diccionario) {
-            println("$clave tiene un precio $valor")
-
+        for ((valor) in fechas.withIndex()) {
+            //println("$valor")
             calendar!!.setOnDateChangeListener(
                 OnDateChangeListener { view, year, month, dayOfMonth ->
                     val Date = (year.toString() + "-" + (month + 1) + "-" + dayOfMonth.toString())
                     date_view!!.text = Date
-                    //diccionario["fecha2"].toString()
-                    if (Date.compareTo("$valor") == 0) {
+                    if (fechas.indexOf(Date)> -1) {
+
+                        var indice=fechas.indexOf(Date).toString().toInt()
+
                         Toast.makeText(
                             applicationContext,
-                            diccionario["titulo2"].toString(),
+                            titulos[indice],
                             Toast.LENGTH_SHORT
                         ).show();
 
@@ -143,23 +134,23 @@ class CalendarEvents : AppCompatActivity() {
 
                         val imagen_editImage: ImageView =
                             customLayout.findViewById(com.example.recicla.R.id.imagen)
-                        Picasso.get().load(diccionario["imagen2"].toString()).into(imagen_editImage)
+                        Picasso.get().load(imagenes[indice]).into(imagen_editImage)
 
                         val fecha_editText: TextView =
                             customLayout.findViewById(com.example.recicla.R.id.fecha)
-                        fecha_editText.setText(diccionario["fecha2"].toString())
+                        fecha_editText.setText(fechas[indice])
 
                         val titulo_editText: TextView =
                             customLayout.findViewById(com.example.recicla.R.id.titulo)
-                        titulo_editText.setText(diccionario["titulo2"].toString())
+                        titulo_editText.setText(titulos[indice])
 
                         val descripcion_editText: TextView =
                             customLayout.findViewById(com.example.recicla.R.id.descripcion)
-                        descripcion_editText.setText(diccionario["descripcion2"].toString())
+                        descripcion_editText.setText(descripciones[indice])
 
                         val lugar_editText: TextView =
                             customLayout.findViewById(com.example.recicla.R.id.lugar)
-                        lugar_editText.setText(diccionario["lugar2"].toString())
+                        lugar_editText.setText(lugares[indice])
 
                         mensaje.show()
                     } else {
@@ -172,7 +163,7 @@ class CalendarEvents : AppCompatActivity() {
                 }
             )
             println();
-        }// Add Listener in calendar
-
+        }
+        return diccionario.toString();
     }
 }
