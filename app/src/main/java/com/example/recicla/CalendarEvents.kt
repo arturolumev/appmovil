@@ -13,6 +13,7 @@ import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.activity_calendar_events.*
 import org.json.JSONException
 
 class CalendarEvents : AppCompatActivity() {
@@ -32,7 +33,7 @@ class CalendarEvents : AppCompatActivity() {
                     return@setOnItemSelectedListener true
                 }
                 com.example.recicla.R.id.action_top10->{
-                    startActivity(Intent(this,TopTenAll::class.java))
+                    startActivity(Intent(this,listadoTopten::class.java))
                     return@setOnItemSelectedListener true
                 }
                 com.example.recicla.R.id.action_statics->{
@@ -115,6 +116,7 @@ class CalendarEvents : AppCompatActivity() {
                 OnDateChangeListener { view, year, month, dayOfMonth ->
                     val Date = (year.toString() + "-" + (month + 1) + "-" + dayOfMonth.toString())
                     date_view!!.text = Date
+
                     if (fechas.indexOf(Date)> -1) {
 
                         var indice=fechas.indexOf(Date).toString().toInt()
@@ -143,6 +145,7 @@ class CalendarEvents : AppCompatActivity() {
                         val titulo_editText: TextView =
                             customLayout.findViewById(com.example.recicla.R.id.titulo)
                         titulo_editText.setText(titulos[indice])
+                        evento_view!!.text=titulos[indice]
 
                         val descripcion_editText: TextView =
                             customLayout.findViewById(com.example.recicla.R.id.descripcion)
@@ -159,6 +162,7 @@ class CalendarEvents : AppCompatActivity() {
                             "No hay eventos planeados para ese día",
                             Toast.LENGTH_SHORT
                         ).show();
+                        evento_view!!.text=""
                     }
                 }
             )

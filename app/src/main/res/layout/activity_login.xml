@@ -67,5 +67,6 @@
         android:padding="10dp"
         android:text="¿No tienes una cuenta? Registrate"
         android:textColor="@color/black"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:clickable="true"/>
 </LinearLayout>

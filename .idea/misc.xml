@@ -3,6 +3,15 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/PY de SW/Proyectos Andorid/mobile-recicla/app/src/main/res/layout/activity_calendar_events.xml" value="0.25416666666666665" />
+        <entry key="..\:/PY de SW/Proyectos Andorid/mobile-recicla/app/src/main/res/layout/activity_estadisticas.xml" value="0.10729166666666666" />
+        <entry key="..\:/PY de SW/Proyectos Andorid/mobile-recicla/app/src/main/res/layout/activity_listado_topten.xml" value="0.176" />
+        <entry key="..\:/PY de SW/Proyectos Andorid/mobile-recicla/app/src/main/res/layout/activity_login.xml" value="0.21240942028985507" />
+        <entry key="..\:/PY de SW/Proyectos Andorid/mobile-recicla/app/src/main/res/layout/activity_main.xml" value="0.176" />
+        <entry key="..\:/PY de SW/Proyectos Andorid/mobile-recicla/app/src/main/res/layout/activity_register.xml" value="0.1983695652173913" />
+        <entry key="..\:/PY de SW/Proyectos Andorid/mobile-recicla/app/src/main/res/layout/activity_top_ten.xml" value="0.20969202898550723" />
+        <entry key="..\:/PY de SW/Proyectos Andorid/mobile-recicla/app/src/main/res/layout/activity_top_ten_all.xml" value="0.20969202898550723" />
+        <entry key="..\:/PY de SW/Proyectos Andorid/mobile-recicla/app/src/main/res/layout/elementoslista.xml" value="0.264" />
         <entry key="..\:/Users/LENOVO/AndroidStudioProjects/mobile-recicla/app/src/main/res/drawable-anydpi/ic_top10.xml" value="0.1" />
         <entry key="..\:/Users/LENOVO/AndroidStudioProjects/mobile-recicla/app/src/main/res/layout/activity_calendar_events.xml" value="0.20869565217391303" />
         <entry key="..\:/Users/LENOVO/AndroidStudioProjects/mobile-recicla/app/src/main/res/layout/activity_calendario_eventos.xml" value="0.140625" />

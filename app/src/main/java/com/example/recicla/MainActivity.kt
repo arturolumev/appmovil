@@ -30,6 +30,10 @@ class MainActivity : AppCompatActivity() {
             BuscarUsername()
         }
 
+        register.setOnClickListener{
+            startActivity(Intent(this,Register::class.java))
+        }
+
         val navigation = findViewById<BottomNavigationView>(R.id.menu);
         navigation?.setOnItemSelectedListener{
             when(it.itemId) {
@@ -45,8 +49,7 @@ class MainActivity : AppCompatActivity() {
             }
             false
         }
-    }
-    fun BuscarUsername() {
+    }fun BuscarUsername() {
         AsyncTask.execute {
 
             val username = txtUsuario.text.toString()
@@ -59,15 +62,15 @@ class MainActivity : AppCompatActivity() {
                 Response.Listener { response -> // response
                     Toast.makeText(
                         applicationContext,
-                        "EXITO",
+                        "Bienvenido(a) $username",
                         Toast.LENGTH_LONG
                     ).show()
-                    startActivity(Intent(this,Estadisticas::class.java))
+                    startActivity(Intent(this,CalendarEvents::class.java))
                 },
                 Response.ErrorListener { response ->// error
                     Toast.makeText(
                         applicationContext,
-                        response.toString(),
+                        "Usuario o contraseña incorrecta",
                         Toast.LENGTH_LONG
                     ).show()
                 }
@@ -82,6 +85,7 @@ class MainActivity : AppCompatActivity() {
             }
             queue.add(postRequest)
         }
+
     }
 
 

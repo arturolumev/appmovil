@@ -1,9 +1,13 @@
 package com.example.recicla
 
-
 import android.content.Intent
+import android.os.AsyncTask
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.android.volley.toolbox.JsonArrayRequest
+import com.android.volley.toolbox.Volley
 import com.anychart.AnyChart
 import com.anychart.AnyChartView
 import com.anychart.chart.common.dataentry.DataEntry
@@ -14,13 +18,197 @@ import com.anychart.enums.MarkerType
 import com.anychart.enums.TooltipPositionMode
 import com.anychart.graphics.vector.Stroke
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.android.synthetic.main.activity_estadisticas.*
+import org.json.JSONException
+
+var porcen = 0
+var porcentajePlastico: MutableList<Int> = mutableListOf()
+var porcentajeVidrio: MutableList<Int> = mutableListOf()
+var porcentajePapel: MutableList<Int> = mutableListOf()
+var fechaLista: MutableList<String> = mutableListOf()
 
 class Estadisticas : AppCompatActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_estadisticas)
+
+        //quite el agregado todo en uno
+        cargar()
+        //cargarPlastico()
+        //cargarVidrio()
+        //cargarPapel()
+        //principal()
+
+        val navigation = findViewById<BottomNavigationView>(R.id.bottom_navigation);
+        navigation?.setOnItemSelectedListener{
+            when(it.itemId) {
+                R.id.action_calendar -> {
+                    startActivity(Intent(this,CalendarEvents::class.java))
+                    return@setOnItemSelectedListener true
+                }
+                R.id.action_top10->{
+                    startActivity(Intent(this,listadoTopten::class.java))
+                    return@setOnItemSelectedListener true
+                }
+                R.id.action_statics->{
+                    startActivity(Intent(this,Estadisticas::class.java))
+                    return@setOnItemSelectedListener true
+                }
+            }
+            false
+        }
+    }
+
+    class CustomDataEntry internal constructor(
+        x: String?,
+        value: Number?,
+        value2: Number?,
+        value3: Number?
+    ) :
+        ValueDataEntry(x, value) {
+        init {
+            setValue("value2", value2)
+            setValue("value3", value3)
+        }
+    }
+
+    fun cargar() {
+        AsyncTask.execute {
+            val queue = Volley.newRequestQueue(applicationContext)
+            val urlPlastico = getString(com.example.recicla.R.string.urlAPI) + "/api/rplastico/6"
+            val stringRequestPlastico = JsonArrayRequest(urlPlastico,
+                { response ->
+                    try {
+                        var total_count=0
+                        var reg_date=""
+                        for (i in 0 until response.length()) {
+                            total_count =
+                                response.getJSONObject(i).getInt("total_count")
+                            reg_date =
+                                response.getJSONObject(i).getString("reg_date").substring(0,10)
+
+                            agregarPlastico(reg_date, total_count)
+                        }
+
+                    } catch (e: JSONException) {
+                        Toast.makeText(
+                            applicationContext,
+                            "Error al obtener los datos",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }, {
+                    Toast.makeText(
+                        applicationContext,
+                        "Verifique que esta conectado a internet",
+                        Toast.LENGTH_LONG
+                    ).show()
+                })
+            queue.add(stringRequestPlastico)
+
+            //
+            val urlVidrio = getString(com.example.recicla.R.string.urlAPI) + "/api/rvidrio/6"
+            val stringRequestVidrio = JsonArrayRequest(urlVidrio,
+                { response ->
+                    try {
+                        var total_count=0
+                        for (i in 0 until response.length()) {
+                            total_count =
+                                response.getJSONObject(i).getInt("total_count")
+                            agregarVidrio(total_count)
+                        }
+
+
+                    } catch (e: JSONException) {
+                        Toast.makeText(
+                            applicationContext,
+                            "Error al obtener los datos",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }, {
+                    Toast.makeText(
+                        applicationContext,
+                        "Verifique que esta conectado a internet",
+                        Toast.LENGTH_LONG
+                    ).show()
+                })
+            queue.add(stringRequestVidrio)
+
+            //
+            val urlPapel = getString(com.example.recicla.R.string.urlAPI) + "/api/rpapel/6"
+            val stringRequestPapel = JsonArrayRequest(urlPapel,
+                { response ->
+                    try {
+                        var total_count=0
+                        for (i in 0 until response.length()) {
+                            total_count =
+                                response.getJSONObject(i).getInt("total_count")
+                            agregarPapel(total_count)
+                        }
+                        principal()
+                    } catch (e: JSONException) {
+                        Toast.makeText(
+                            applicationContext,
+                            "Error al obtener los datos",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }, {
+                    Toast.makeText(
+                        applicationContext,
+                        "Verifique que esta conectado a internet",
+                        Toast.LENGTH_LONG
+                    ).show()
+                })
+            queue.add(stringRequestPapel)
+        }
+
+    }
+
+    fun agregarPlastico(fecha: String, porcentaje: Int) {
+
+        var date = fecha
+        var plastico = porcentaje
+
+        fechaLista.add(date)
+        porcentajePlastico.add(plastico)
+        //principal()
+    }
+
+    fun agregarVidrio(porcentaje:Int) {
+
+        //var date = fecha
+        var vidrio = porcentaje
+
+        //fechaLista.add(date)
+        porcentajeVidrio.add(vidrio)
+    }
+
+    fun agregarPapel(porcentaje:Int) {
+
+        //var date = fecha
+        var papel = porcentaje
+
+        //fechaLista.add(date)
+        porcentajePapel.add(papel)
+    }
+
+    fun principal(){
+
+        Log.e("Fechas", fechaLista.toString())
+        Log.e("Plasticos", porcentajePlastico.toString())
+        Log.e("Vidrios", porcentajeVidrio.toString())
+        Log.e("Papeles", porcentajePapel.toString())
+
+        //var date = fecha
+        //var porcen = porcentaje
+
+        //return porcentajePlastico.add(porcen)
+        //fechaLista.add(date)
+
+        //Log.e("Porcentaje Plastico", porcentajePlastico.toString())
+        //Log.e("Fecha Plastico", fechaLista.toString())
+
         val anyChartView = findViewById<AnyChartView>(R.id.any_chart_view)
         //anyChartView.setProgressBar(findViewById(R.id.progress_bar))
         val cartesian = AnyChart.line()
@@ -31,34 +219,15 @@ class Estadisticas : AppCompatActivity() {
             .yLabel(true)
             .yStroke(null as Stroke?, null, null, null as String?, null as String?)
         cartesian.tooltip().positionMode(TooltipPositionMode.POINT)
-        //cartesian.title("Trend of Sales of the Most Popular Products of ACME Corp.")
-        //cartesian.yAxis(0).title("Number of Bottles Sold (thousands)")
-        //cartesian.xAxis(0).labels().padding(5.0, 5.0, 5.0, 5.0)
+
         val seriesData: MutableList<DataEntry> = ArrayList()
-        seriesData.add(CustomDataEntry("1986", 3.6, 2.3, 2.8))
-        seriesData.add(CustomDataEntry("1987", 7.1, 4.0, 4.1))
-        seriesData.add(CustomDataEntry("1988", 8.5, 6.2, 5.1))
-        seriesData.add(CustomDataEntry("1989", 9.2, 11.8, 6.5))
-        seriesData.add(CustomDataEntry("1990", 10.1, 13.0, 12.5))
-        seriesData.add(CustomDataEntry("1991", 11.6, 13.9, 18.0))
-        seriesData.add(CustomDataEntry("1992", 16.4, 18.0, 21.0))
-        seriesData.add(CustomDataEntry("1993", 18.0, 23.3, 20.3))
-        seriesData.add(CustomDataEntry("1994", 13.2, 24.7, 19.2))
-        seriesData.add(CustomDataEntry("1995", 12.0, 18.0, 14.4))
-        seriesData.add(CustomDataEntry("1996", 3.2, 15.1, 9.2))
-        seriesData.add(CustomDataEntry("1997", 4.1, 11.3, 5.9))
-        seriesData.add(CustomDataEntry("1998", 6.3, 14.2, 5.2))
-        seriesData.add(CustomDataEntry("1999", 9.4, 13.7, 4.7))
-        seriesData.add(CustomDataEntry("2000", 11.5, 9.9, 4.2))
-        seriesData.add(CustomDataEntry("2001", 13.5, 12.1, 1.2))
-        seriesData.add(CustomDataEntry("2002", 14.8, 13.5, 5.4))
-        seriesData.add(CustomDataEntry("2003", 16.6, 15.1, 6.3))
-        seriesData.add(CustomDataEntry("2004", 18.1, 17.9, 8.9))
-        seriesData.add(CustomDataEntry("2005", 17.0, 18.9, 10.1))
-        seriesData.add(CustomDataEntry("2006", 16.6, 20.3, 11.5))
-        seriesData.add(CustomDataEntry("2007", 14.1, 20.7, 12.2))
-        seriesData.add(CustomDataEntry("2008", 15.7, 21.6, 10))
-        seriesData.add(CustomDataEntry("2009", 12.0, 22.5, 8.9))
+
+        //Log.e("Plasticossss", porcentajePlastico.toString())
+        //Log.e("Fechassss", fechaLista.toString())
+        for (i in fechaLista.indices) {
+            seriesData.add(CustomDataEntry(fechaLista[i].toString(), porcentajePlastico[i].toString().toDouble(), porcentajeVidrio[i].toString().toDouble(), porcentajePapel[i].toString().toDouble()))
+        }
+
         val set = Set.instantiate()
         set.data(seriesData)
         val series1Mapping = set.mapAs("{ x: 'x', value: 'value' }")
@@ -103,36 +272,8 @@ class Estadisticas : AppCompatActivity() {
         cartesian.legend().padding(0.0, 0.0, 10.0, 0.0)
         anyChartView.setChart(cartesian)
 
-        val navigation = findViewById<BottomNavigationView>(R.id.bottom_navigation);
-        navigation?.setOnItemSelectedListener{
-            when(it.itemId) {
-                R.id.action_calendar -> {
-                    startActivity(Intent(this,CalendarEvents::class.java))
-                    return@setOnItemSelectedListener true
-                }
-                R.id.action_top10->{
-                    startActivity(Intent(this,TopTenAll::class.java))
-                    return@setOnItemSelectedListener true
-                }
-                R.id.action_statics->{
-                    startActivity(Intent(this,Estadisticas::class.java))
-                    return@setOnItemSelectedListener true
-                }
-            }
-            false
-        }
+        Log.e("ver", seriesData.toString())
+
     }
 
-    private class CustomDataEntry internal constructor(
-        x: String?,
-        value: Number?,
-        value2: Number?,
-        value3: Number?
-    ) :
-        ValueDataEntry(x, value) {
-        init {
-            setValue("value2", value2)
-            setValue("value3", value3)
-        }
-    }
 }
