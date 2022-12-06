@@ -3,6 +3,7 @@ package com.example.recicla
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +19,7 @@ import com.anychart.enums.MarkerType
 import com.anychart.enums.TooltipPositionMode
 import com.anychart.graphics.vector.Stroke
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.android.synthetic.main.activity_estadisticas.*
 import org.json.JSONException
 
 var porcen = 0
@@ -33,6 +35,14 @@ class Estadisticas : AppCompatActivity() {
 
         //quite el agregado todo en uno
         cargar()
+        Handler().postDelayed({
+            principal()
+        }, 500)
+        actualizar.setOnClickListener({
+            val intent = Intent(this, Estadisticas::class.java)
+            startActivity(intent)
+        })
+
         //cargarPlastico()
         //cargarVidrio()
         //cargarPapel()
@@ -86,7 +96,8 @@ class Estadisticas : AppCompatActivity() {
                             reg_date =
                                 response.getJSONObject(i).getString("reg_date").substring(0,10)
 
-                            agregarPlastico(reg_date, total_count)
+                            agregarPlastico(total_count)
+                            fechaLista.add(reg_date)
                         }
 
                     } catch (e: JSONException) {
@@ -145,7 +156,7 @@ class Estadisticas : AppCompatActivity() {
                                 response.getJSONObject(i).getInt("total_count")
                             agregarPapel(total_count)
                         }
-                        principal()
+
                     } catch (e: JSONException) {
                         Toast.makeText(
                             applicationContext,
@@ -165,12 +176,11 @@ class Estadisticas : AppCompatActivity() {
 
     }
 
-    fun agregarPlastico(fecha: String, porcentaje: Int) {
+    fun agregarPlastico(porcentaje: Int) {
 
-        var date = fecha
         var plastico = porcentaje
 
-        fechaLista.add(date)
+
         porcentajePlastico.add(plastico)
         //principal()
     }
