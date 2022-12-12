@@ -18,6 +18,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONException
+import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,7 +66,12 @@ class MainActivity : AppCompatActivity() {
                         "Bienvenido(a) $username",
                         Toast.LENGTH_LONG
                     ).show()
-                    startActivity(Intent(this,CalendarEvents::class.java))
+                    var res = JSONObject(response)
+                    var intent = Intent(this,CalendarEvents::class.java)
+                    intent.putExtra("user_id",res["id"].toString())
+                    intent.putExtra("date_joined",res["date_joined"].toString())
+                    startActivity(intent)
+                    //startActivity(Intent(this,CalendarEvents::class.java))
                 },
                 Response.ErrorListener { response ->// error
                     Toast.makeText(

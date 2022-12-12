@@ -19,9 +19,18 @@ import org.json.JSONException
 class CalendarEvents : AppCompatActivity() {
     var calendar: CalendarView? = null
     var date_view: TextView? = null
+    var user_id = ""
+    var date_joined =""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(com.example.recicla.R.layout.activity_calendar_events)
+        var parametros:Bundle ?=  intent.extras
+
+        if (parametros != null) {
+            user_id = parametros.getString("user_id").toString()
+            date_joined = parametros.getString("date_joined").toString()
+        }
 
         cargarProyectos()
 
@@ -29,7 +38,11 @@ class CalendarEvents : AppCompatActivity() {
         navigation?.setOnItemSelectedListener{
             when(it.itemId) {
                 com.example.recicla.R.id.action_calendar -> {
-                    startActivity(Intent(this,CalendarEvents::class.java))
+                    var intent = Intent(this,CalendarEvents::class.java)
+                    intent.putExtra("user_id",user_id)
+                    intent.putExtra("date_joined",date_joined)
+                    startActivity(intent)
+                    //startActivity(Intent(this,CalendarEvents::class.java))
                     return@setOnItemSelectedListener true
                 }
                 com.example.recicla.R.id.action_top10->{
@@ -37,7 +50,11 @@ class CalendarEvents : AppCompatActivity() {
                     return@setOnItemSelectedListener true
                 }
                 com.example.recicla.R.id.action_statics->{
-                    startActivity(Intent(this,Estadisticas::class.java))
+                    //startActivity(Intent(this,Estadisticas::class.java))
+                    var intent = Intent(this,Estadisticas::class.java)
+                    intent.putExtra("user_id",user_id)
+                    intent.putExtra("date_joined",date_joined)
+                    startActivity(intent)
                     return@setOnItemSelectedListener true
                 }
             }

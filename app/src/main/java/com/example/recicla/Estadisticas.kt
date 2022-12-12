@@ -2,6 +2,7 @@ package com.example.recicla
 
 import android.content.Intent
 import android.os.AsyncTask
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -20,13 +21,24 @@ import com.anychart.enums.TooltipPositionMode
 import com.anychart.graphics.vector.Stroke
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_estadisticas.*
+import kotlinx.android.synthetic.main.activity_evento_detalle.*
 import org.json.JSONException
+import java.time.Instant
+import java.time.ZonedDateTime
 
 var porcen = 0
 var porcentajePlastico: MutableList<Int> = mutableListOf()
 var porcentajeVidrio: MutableList<Int> = mutableListOf()
 var porcentajePapel: MutableList<Int> = mutableListOf()
 var fechaLista: MutableList<String> = mutableListOf()
+
+var user_id = ""
+var date_joined =""
+
+//probando
+var fechasPlastico: MutableList<String> = mutableListOf()
+var fechasPapel: MutableList<String> = mutableListOf()
+var fechasVidrio: MutableList<String> = mutableListOf()
 
 class Estadisticas : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,7 +52,10 @@ class Estadisticas : AppCompatActivity() {
         }, 500)
         actualizar.setOnClickListener({
             val intent = Intent(this, Estadisticas::class.java)
+            intent.putExtra("user_id",user_id)
+            intent.putExtra("date_joined",date_joined)
             startActivity(intent)
+            //startActivity(intent)
         })
 
         //cargarPlastico()
@@ -52,7 +67,11 @@ class Estadisticas : AppCompatActivity() {
         navigation?.setOnItemSelectedListener{
             when(it.itemId) {
                 R.id.action_calendar -> {
-                    startActivity(Intent(this,CalendarEvents::class.java))
+                    var intent = Intent(this,CalendarEvents::class.java)
+                    intent.putExtra("user_id",user_id)
+                    intent.putExtra("date_joined",date_joined)
+                    startActivity(intent)
+                    //startActivity(Intent(this,CalendarEvents::class.java))
                     return@setOnItemSelectedListener true
                 }
                 R.id.action_top10->{
@@ -60,7 +79,11 @@ class Estadisticas : AppCompatActivity() {
                     return@setOnItemSelectedListener true
                 }
                 R.id.action_statics->{
-                    startActivity(Intent(this,Estadisticas::class.java))
+                    //startActivity(Intent(this,Estadisticas::class.java))
+                    var intent = Intent(this,Estadisticas::class.java)
+                    intent.putExtra("user_id",user_id)
+                    intent.putExtra("date_joined",date_joined)
+                    startActivity(intent)
                     return@setOnItemSelectedListener true
                 }
             }
@@ -82,9 +105,19 @@ class Estadisticas : AppCompatActivity() {
     }
 
     fun cargar() {
+
+        var parametros:Bundle ?=  intent.extras
+        if (parametros!= null){
+            user_id = parametros.getString("user_id").toString()
+            date_joined = parametros.getString("date_joined").toString()
+        }
+
         AsyncTask.execute {
             val queue = Volley.newRequestQueue(applicationContext)
-            val urlPlastico = getString(com.example.recicla.R.string.urlAPI) + "/api/rplastico/6"
+
+            setDatesData(date_joined)
+
+            val urlPlastico = getString(com.example.recicla.R.string.urlAPI) + "/api/rplastico/" + user_id
             val stringRequestPlastico = JsonArrayRequest(urlPlastico,
                 { response ->
                     try {
@@ -95,9 +128,30 @@ class Estadisticas : AppCompatActivity() {
                                 response.getJSONObject(i).getInt("total_count")
                             reg_date =
                                 response.getJSONObject(i).getString("reg_date").substring(0,10)
+                            fechasPlastico.add(reg_date)
+                        }
 
-                            agregarPlastico(total_count)
-                            fechaLista.add(reg_date)
+                        Log.e("FECHAS PLASTICO", fechasPlastico.toString())
+                        var a = 0
+                        var parawhile = 0
+                        for (i in 0 until response.length()) {
+                            total_count =
+                                response.getJSONObject(i).getInt("total_count")
+                            reg_date =
+                                response.getJSONObject(i).getString("reg_date").substring(0,10)
+                            if (fechasPlastico[i] == fechaLista[a]) {
+                                agregarPlastico(total_count)
+                                a++
+                                parawhile++
+                            } else {
+                                while (fechasPlastico[i] != fechaLista[parawhile]) {
+                                    agregarPlastico(0)
+                                    parawhile++
+                                }
+                                Log.e("PARAWHILE PLASTICO", parawhile.toString())
+                                agregarPlastico(total_count)
+                                parawhile++
+                            }
                         }
 
                     } catch (e: JSONException) {
@@ -117,17 +171,42 @@ class Estadisticas : AppCompatActivity() {
             queue.add(stringRequestPlastico)
 
             //
-            val urlVidrio = getString(com.example.recicla.R.string.urlAPI) + "/api/rvidrio/6"
+            val urlVidrio = getString(com.example.recicla.R.string.urlAPI) + "/api/rvidrio/" + user_id
             val stringRequestVidrio = JsonArrayRequest(urlVidrio,
                 { response ->
                     try {
                         var total_count=0
+                        var reg_date=""
                         for (i in 0 until response.length()) {
                             total_count =
                                 response.getJSONObject(i).getInt("total_count")
-                            agregarVidrio(total_count)
+                            reg_date =
+                                response.getJSONObject(i).getString("reg_date").substring(0,10)
+                            fechasVidrio.add(reg_date)
                         }
 
+                        Log.e("FECHAS VIDRIO", fechasVidrio.toString())
+                        var a = 0
+                        var parawhile = 0
+                        for (i in 0 until response.length()) {
+                            total_count =
+                                response.getJSONObject(i).getInt("total_count")
+                            reg_date =
+                                response.getJSONObject(i).getString("reg_date").substring(0,10)
+                            if (fechasVidrio[i] == fechaLista[a]) {
+                                agregarVidrio(total_count)
+                                a++
+                                parawhile++
+                            } else {
+                                while (fechasVidrio[i] != fechaLista[parawhile]) {
+                                    agregarVidrio(0)
+                                    parawhile++
+                                }
+                                Log.e("PARAWHILE VIDRIO", parawhile.toString())
+                                agregarVidrio(total_count)
+                                parawhile++
+                            }
+                        }
 
                     } catch (e: JSONException) {
                         Toast.makeText(
@@ -146,15 +225,41 @@ class Estadisticas : AppCompatActivity() {
             queue.add(stringRequestVidrio)
 
             //
-            val urlPapel = getString(com.example.recicla.R.string.urlAPI) + "/api/rpapel/6"
+            val urlPapel = getString(com.example.recicla.R.string.urlAPI) + "/api/rpapel/" + user_id
             val stringRequestPapel = JsonArrayRequest(urlPapel,
                 { response ->
                     try {
                         var total_count=0
+                        var reg_date=""
                         for (i in 0 until response.length()) {
                             total_count =
                                 response.getJSONObject(i).getInt("total_count")
-                            agregarPapel(total_count)
+                            reg_date =
+                                response.getJSONObject(i).getString("reg_date").substring(0,10)
+                            fechasPapel.add(reg_date)
+                        }
+
+                        Log.e("FECHAS VIDRIO", fechasVidrio.toString())
+                        var a = 0
+                        var parawhile = 0
+                        for (i in 0 until response.length()) {
+                            total_count =
+                                response.getJSONObject(i).getInt("total_count")
+                            reg_date =
+                                response.getJSONObject(i).getString("reg_date").substring(0,10)
+                            if (fechasPapel[i] == fechaLista[a]) {
+                                agregarPapel(total_count)
+                                a++
+                                parawhile++
+                            } else {
+                                while (fechasPapel[i] != fechaLista[parawhile]) {
+                                    agregarPapel(0)
+                                    parawhile++
+                                }
+                                Log.e("PARAWHILE PAPEL", parawhile.toString())
+                                agregarPapel(total_count)
+                                parawhile++
+                            }
                         }
 
                     } catch (e: JSONException) {
@@ -176,11 +281,36 @@ class Estadisticas : AppCompatActivity() {
 
     }
 
+    fun agregarFecha(fecha: String) {
+
+        var fechas = fecha
+        fechaLista.add(fechas)
+        //principal()
+    }
+
+    fun setDatesData(a:String){
+        var timestamp = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Instant.parse(a)
+        } else {
+            TODO("VERSION.SDK_INT < O")
+        }
+        var hoy = ZonedDateTime.now().toString().substring(0,10)+"T00:00:00Z"
+        //Log.d("fechaaaaaaaaaaaaaaaaaaa",hoy.toString())
+        var today = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Instant.parse(hoy)
+        } else {
+            TODO("VERSION.SDK_INT < O")
+        }
+        while(timestamp<=today){
+            fechaLista.add(timestamp.toString().substring(0,10))
+            timestamp = timestamp.plusSeconds(86400)
+        }
+        //Log.d("soy la lista final", fechaLista.toString())
+    }
+
     fun agregarPlastico(porcentaje: Int) {
 
         var plastico = porcentaje
-
-
         porcentajePlastico.add(plastico)
         //principal()
     }
@@ -234,6 +364,38 @@ class Estadisticas : AppCompatActivity() {
 
         //Log.e("Plasticossss", porcentajePlastico.toString())
         //Log.e("Fechassss", fechaLista.toString())
+
+        /*
+        for (i in fechaLista.indices) {
+            seriesData.add(CustomDataEntry(fechaLista[i].toString(), porcentajePlastico[i].toString().toDouble(), porcentajeVidrio[i].toString().toDouble(), porcentajePapel[i].toString().toDouble()))
+        }
+        */
+
+        for (i in fechaLista.indices) {
+
+            var sizeFecha = fechaLista.size
+            var sizePlastico = porcentajePlastico.size
+            var sizePapel = porcentajePapel.size
+            var sizeVidrio = porcentajeVidrio.size
+
+            if (sizePlastico != sizeFecha) {
+                porcentajePlastico.add(0)
+            }
+            if (sizePapel != sizeFecha) {
+                porcentajePapel.add(0)
+            }
+            if (sizeVidrio != sizeFecha) {
+                porcentajeVidrio.add(0)
+            }
+
+
+
+            Log.e("NUEVO PLASTICO", "PLASTICO -> " + porcentajePlastico.toString())
+            Log.e("NUEVO VIDRIO", "VIDRIO -> " + porcentajeVidrio.toString())
+            Log.e("NUEVO PAPEL", "PAPEL -> " + porcentajePapel.toString())
+
+        }
+
         for (i in fechaLista.indices) {
             seriesData.add(CustomDataEntry(fechaLista[i].toString(), porcentajePlastico[i].toString().toDouble(), porcentajeVidrio[i].toString().toDouble(), porcentajePapel[i].toString().toDouble()))
         }

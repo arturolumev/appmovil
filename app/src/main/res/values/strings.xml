@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">recicla</string>
-    <string name="urlAPI">http://192.168.163.234:8000</string>
+    <string name="urlAPI">http://192.168.101.12:3000</string>
 </resources>
